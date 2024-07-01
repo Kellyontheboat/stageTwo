@@ -34,6 +34,11 @@ class UserLogin(BaseModel):
     email: str
     password: str
     
+class CurrentMember(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    
 # Verify password
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)

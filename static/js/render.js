@@ -1,3 +1,5 @@
+import { deleteBooking } from './api.js'
+
 const gridContainerImg = document.querySelector('.grid-container-img');
 const loadingSentinel = document.getElementById("loading-sentinel");
 
@@ -82,6 +84,8 @@ export function renderAttr(attraction) {
 
   const carouselBox = document.querySelector('.carousel-box');
   const indicatorContainer = document.querySelector('.carousel-indicators');
+  const bookingForm = document.querySelector(".order-schedule");
+  const bookingButton = bookingForm.querySelector("button[type='submit']");
 
   function createIndicators(count) {
     indicatorContainer.innerHTML = ''; 
@@ -124,7 +128,25 @@ export function renderAttr(attraction) {
   document.querySelector('.next').addEventListener('click', () => {
     moveSlide(1);
   });
+  
+  const attributes = {
+    'attraction-id': attraction.id,
+    'attraction-name': attraction.name,
+    'attraction-address': attraction.address,
+    'attraction-img': attraction.images[0]
+  };
+
+  localStorage.setItem("bookingData", JSON.stringify(attributes));
 };
+
+//   setAttributes(bookingButton, attributes);
+// };
+
+// function setAttributes(element, attributes) {
+//   for (const key in attributes) {
+//     element.setAttribute(`data-${key}`, attributes[key]);
+//   }
+// }
 
 function moveSlide(direction) {
   const slides = document.querySelectorAll('.slides');
@@ -232,4 +254,112 @@ export async function updateLoginButton() {
 function hideModals() {
   loginModal.style.display = 'none';
   registerModal.style.display = 'none';
+}
+
+//! booking
+const bookingContainer = document.getElementById('booking-container');
+export function appendNewItem(item) {
+
+  const createDiv = (className, textContent = '') => {
+    const div = document.createElement('div');
+    div.className = className;
+    div.textContent = textContent;
+    return div;
+  };
+
+  const createSpanWithPair = (titleClass, titleText, valueClass, valueText) => {
+    const span = document.createElement('span');
+    span.className = 'booking-data-pair';
+
+    const titleDiv = createDiv(titleClass, titleText);
+    const valueDiv = createDiv(valueClass, valueText);
+
+    span.appendChild(titleDiv);
+    span.appendChild(valueDiv);
+
+    return span;
+  };
+
+  const bookingItem = createDiv('booking-item');
+
+  const bookingAttrDetail = createDiv('booking-attr-detail');
+
+  const bookingAttrImg = createDiv('booking-attr-img');
+  const img = document.createElement('img');
+  img.src = item.attraction.image;
+  img.alt = item.attraction.name;
+  bookingAttrImg.appendChild(img);
+
+  const bookingAttrTextWrap = createDiv('booking-attr-text-wrap');
+
+  const attractionName = bookingAttrTextWrap.appendChild(createSpanWithPair('booking-attr-title', '台北一日遊：', 'booking-attr-name', item.attraction.name));
+  attractionName.id = "booking-attr-name"
+
+  bookingAttrTextWrap.appendChild(createSpanWithPair('booking-attr-label', '日期：', 'booking-attr-value', item.date));
+  bookingAttrTextWrap.appendChild(createSpanWithPair('booking-attr-label', '時間：', 'booking-attr-value', item.time));
+  bookingAttrTextWrap.appendChild(createSpanWithPair('booking-attr-label', '費用：', 'booking-attr-value', '新台幣' + item.price + '元'));
+  bookingAttrTextWrap.appendChild(createSpanWithPair('booking-attr-label', '地點：', 'booking-attr-value', item.attraction.address));
+
+  bookingAttrDetail.appendChild(bookingAttrImg);
+  bookingAttrDetail.appendChild(bookingAttrTextWrap);
+
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = 'Delete';
+  deleteButton.dataset.bookingId = item.id;
+  deleteButton.innerHTML = '<img src="/static/pics/icon_delete.png" alt="Delete">';
+  deleteButton.id = 'booking-delete-btn';
+
+  deleteButton.addEventListener('click', async function () {
+    const bookingId = this.dataset.bookingId;
+    await deleteBooking(bookingId);
+  });
+
+  bookingItem.appendChild(bookingAttrDetail);
+  bookingItem.appendChild(deleteButton);
+  bookingContainer.appendChild(bookingItem);
+}
+
+export async function fetchAndRenderItemsFromDB(username) {
+
+  const bookingUsername = document.getElementById('booking-username');
+  bookingUsername.textContent = username;
+
+  try {
+    const token = localStorage.getItem("token");
+    const response = await fetch('/api/booking', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch booking data');
+    }
+
+    const dataList = await response.json();
+    document.getElementById('booking-total-cost').innerText = '總價：新台幣' + dataList.total_cost + '元'
+
+    if (dataList.bookings.length === 0) {
+      const item = document.createElement('div');
+      item.classList = 'booking-message'
+      item.textContent = '目前沒有任何待預訂的行程';
+      const targetElement = document.getElementById('booking-content')
+      const parentElement = targetElement.parentNode;
+      parentElement.insertBefore(item, targetElement);
+      targetElement.style.display = 'none';
+      return;
+    };
+
+    console.log("fetchAndRenderItemsFromDB", dataList)
+    dataList.bookings.forEach(item => appendNewItem(item.data));
+    const inputName = localStorage.getItem('username');
+    const inputEmail = localStorage.getItem('useremail');
+    document.getElementById('booking-name').value = inputName;
+    document.getElementById('booking-email').value = inputEmail;
+    localStorage.removeItem('username');
+    localStorage.removeItem('useremail');
+  } catch (error) {
+    console.error('Error fetching booking data:', error);
+    // Handle error as needed (e.g., show error message)
+  }
 }

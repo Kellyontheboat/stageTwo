@@ -1,11 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Booking</title>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
+
 <body>
-  
+  <!-- ! TOP Nav -->
+  <div class="navbar-container">
+    <div class="navbar">
+      <a href="/"><span class="nav-title">台北一日遊</span></a>
+      <span class="nav-item-container">
+        <span class="nav-item" id="to-booking-btn" style="margin-right: 20px;">預定行程</span>
+        <span class="nav-item" id="login-register-btn">登入/註冊</span>
+      </span>
+
+      <!-- Modal: Login -->
+      <div id="loginModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-decorate"></div>
+          <div class="modal-title-container">
+            <h2>登入會員帳號</h2>
+            <span class="close">&times;</span>
+          </div>
+          <form action="/api/user/auth" method="put" id="signin-form-login" novalidate>
+            <div class="form-group">
+              <input type="email" id="email" name="email" placeholder="輸入電子信箱" required>
+            </div>
+            <div class="form-group">
+              <input type="password" id="password" name="password" placeholder="輸入密碼" required>
+            </div>
+            <div class="form-group">
+              <button type="submit">登入帳戶</button>
+            </div>
+          </form>
+          <span id="login-msg" class="login-modal-item"></span>
+          <span class="login-modal-item" id="register-modal-btn">還沒有帳戶？點此註冊</span>
+
+        </div>
+      </div>
+
+      <!-- ! modal register -->
+      <div id="registerModal" class="modal">
+        <div class="modal-content">
+          <div class="modal-decorate"></div>
+          <div class="modal-title-container">
+            <h2>註冊會員帳號</h2>
+            <span class="close">&times;</span>
+          </div>
+          <form id="signin-form-register" novalidate>
+            <div class="form-group">
+              <input type="text" id="name" name="name" placeholder="輸入姓名" required>
+            </div>
+            <div class="form-group">
+              <input type="email" id="register-email" name="email" placeholder="輸入電子郵件" required>
+            </div>
+            <div class="form-group">
+              <input type="password" id="register-password" name="password" placeholder="輸入密碼" required>
+            </div>
+            <div class="form-group">
+              <button type="submit">註冊新帳戶</button>
+            </div>
+          </form>
+          <span id="register-msg"></span>
+          <span class="register-modal-item" id="login-modal-btn">已經有帳戶了？點此登入</span>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ! booking content -->
+  <hr class="under-nav">
+  <div id="booking-wrapper">
+    <div id="booking-container">
+      <div id="booking-span">
+        <span>您好，</span><span id="booking-username">Username</span><span>，待預定的行程如下：</span><br>
+      </div>
+      
+      <!-- Booking js append -->
+    </div>
+
+<div id="booking-content">
+
+<hr class="middle  booking">
+      <!-- 您的聯絡資訊 -->
+    <div class="booking-form contact">
+
+      <div class="booking-form-title">
+        您的聯絡資訊
+      </div>
+      <form id="booking-form" novalidate>
+
+        <div class="form-group">
+          <label for="name">聯絡姓名：</label>
+          <input type="text" id="booking-name" name="name" required>
+        </div>
+        <div class="form-group">
+          <label for="name">連絡信箱：</label>
+          <input type="email" id="booking-email" name="email" required>
+        </div>
+        <div class="form-group">
+          <label for="name">手機號碼：</label>
+          <input type="tel" id="booking-tel" name="tel" required>
+        </div>
+        <div class="form-group">
+          <div id="booking-contact-message">
+            請保持手機暢通，準時到達，導覽人員將用手機與您聯繫，務必留下正確的聯絡方式。
+          </div>      
+        </div>
+    </div>
+<hr class="middle  booking">
+    <div class="booking-form pay">
+      <!-- 信用卡付款資訊 -->
+      <div class="booking-form pay inside">
+        <div class="booking-form-title">
+          信用卡付款資訊
+        </div>
+        <div class="form-group">
+          <label for="card-number">卡片號碼：</label>
+          <input type="text" id="card-number" name="card-number" placeholder="**** **** **** ****" required>
+        </div>
+        <div class="form-group">
+          <label for="expiry-date">過期時間：</label>
+          <input type="text" id="expiry-date" name="expiry-date" placeholder="MM / YY" required>
+        </div>
+        <div class="form-group">
+          <label for="cvv">驗證密碼：</label>
+          <input type="text" id="cvv" name="cvv" placeholder="CVV" required>
+        </div>
+      </div>
+      
+<hr class="middle booking">
+      <div class="form-group cost-pay">
+        <div id="booking-total-cost">總價：新台幣 2000 元</div>
+        <button type="submit">確認訂購並付款</button>
+        </div>
+      </div>
+      </form>      
+    </div>
+  </div>
+
+  <script type="module" src="/static/js/main.js"></script>
+  <!-- ! Footer -->
+  <div class="before-footer"></div>
+  <div class="footer">
+    <div class="footer-text">COPYRIGHT © 2021 台北一日遊</div>
+  </div>
 </body>
+
 </html>

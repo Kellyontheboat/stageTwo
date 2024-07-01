@@ -1,7 +1,8 @@
-from fastapi import APIRouter, Request, Query
-from fastapi.responses import JSONResponse, FileResponse
+from fastapi import APIRouter, Request, Query, Depends
+from fastapi.responses import JSONResponse, FileResponse, RedirectResponse
 from typing import Optional
 from models.attractions import get_db_attrs_with_imgs, get_db_attr_with_imgs, get_db_mrts
+from models.members import get_current_member
 
 router = APIRouter()
 
@@ -14,7 +15,7 @@ async def attraction(request: Request, id: int):
     return FileResponse("./static/attraction.html", media_type="text/html")
 
 @router.get("/booking", include_in_schema=False)
-async def booking(request: Request):
+async def booking(request: Request):  #, user: dict = Depends(get_current_member)
     return FileResponse("./static/booking.html", media_type="text/html")
 
 @router.get("/thankyou", include_in_schema=False)

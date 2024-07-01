@@ -12,7 +12,7 @@
     <div class="navbar">
       <a href="/"><span class="nav-title">台北一日遊</span></a>
       <span class="nav-item-container">
-        <span class="nav-item" style="margin-right: 20px;">預定行程</span>
+        <span class="nav-item" id="to-booking-btn" style="margin-right: 20px;">預定行程</span>
         <span class="nav-item" id="login-register-btn">登入/註冊</span>
         </span>
         
@@ -41,7 +41,7 @@
           </div>
         </div>
         
-        <!-- ! modal register -->
+        <!-- ! modal register --> 
         <div id="registerModal" class="modal">
           <div class="modal-content">
             <div class="modal-decorate"></div>
@@ -105,8 +105,39 @@
         <div class="details">
             <h1 id="attr-name">Attraction Name</h1>
             <p id="category-mrt">Category at MRT Station</p>
-
             <form class="order-schedule">
+              <div class="form-text-wrap">
+                <div class="form-row form-item-title">訂購導覽行程</div>
+                <div class="form-row">以此景點為中心的一日行程，帶您探索城市角落故事</div>
+            
+                <div class="form-row">
+                  <label class="form-item-title" for="date">選擇日期：</label>
+                  <input type="date" id="date" name="date" required pattern="\d{4}-\d{2}-\d{2}" title="請輸入格式為YYYY-MM-DD的日期">
+                </div>
+            
+                <div class="form-row time-container">
+                  <label class="form-item-title" for="time">選擇時間：</label>
+                  <div id="time">
+                    <fieldset>
+                      <legend></legend>
+                      <input type="radio" id="morning" name="time" value="morning" required>
+                      <label for="morning">上半天</label>
+                      <input type="radio" id="afternoon" name="time" value="afternoon" required>
+                      <label for="afternoon">下半天</label>
+                    </fieldset>
+                  </div>
+                </div>
+            
+                <div class="form-row" id="cost">
+                  <div class="form-item-title" for="cost">導覽費用：</div>
+                  <div class="cost-amount">新台幣 2500 元</div>
+                </div>
+            
+                <button type="submit">開始預約行程</button>
+              </div>
+            </form>
+
+            <!-- <form class="order-schedule">
               <div class="form-text-wrap">
 
                 <div class="form-row form-item-title">訂購導覽行程</div>
@@ -135,7 +166,7 @@
 
                 <button type="submit">開始預約行程</button>
               </div>
-            </form>
+            </form> -->
         </div>
     </div>
 
